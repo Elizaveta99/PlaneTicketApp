@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">PlaneTicketApp</string>
+    <string name="login">Login</string>
+    <string name="enter">Enter</string>
+    <string name="hello">Hello</string>
+    <string name="from">TextView</string>
+    <string name="where">TextView</string>
+    <string name="date">TextView</string>
+    <string name="time">TextView</string>
+    <string name="price">TextView</string>
+    <string name="edit">Edit</string>
+    <string name="save">Save</string>
+    <string name="delete">Delete</string>
+    <string name="add">Add</string>
+</resources>
