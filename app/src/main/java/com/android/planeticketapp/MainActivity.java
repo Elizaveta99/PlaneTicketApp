@@ -25,37 +25,11 @@ public class MainActivity extends AppCompatActivity {
         return getContext();
     }
 
-    private void startAuthorize(){
+    public void startAuthorize(){
         paymentController = new PaymentController(new OrdersController(userId));
         paymentController.payForMethod(new MethodDateUsage(new Date(), new Date()),
                 "getUser", null);
     }
-
-    private void startReadRoutes(){
-        paymentController.payForMethod(new MethodDateUsage(new Date(), new Date()),
-                "getFullUserFlightsInfo", null);
-    }
-
-    private void startReadAllRoutes(){
-        paymentController.payForMethod(new MethodDateUsage(new Date(), new Date()),
-                "getFlightsInfo", null);
-    }
-
-    private void startAddRoute(Route route){
-        paymentController.payForMethod(new MethodDateUsage(new Date(), new Date()),
-                "addFlight", route);
-    }
-
-    private void startUpdateRoute(Route route){
-        paymentController.payForMethod(new MethodDateUsage(new Date(), new Date()),
-                "updateFlight", route);
-    }
-
-    private void startDeleteRoute(Route route){
-        paymentController.payForMethod(new MethodDateUsage(new Date(), new Date()),
-                "deleteFlight", route);
-    }
-
 
 
 
@@ -77,9 +51,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void orderTicket(View view) {
         Log.d(LOG_TAG, "Button clicked!");
-        // оплата - userEmail сохранить в переменной
+        //startAuthorize();
         Intent intent = new Intent(this, OrderTicketActivity.class);
         String message = mLogin.getText().toString();
+        userId = message;
         intent.putExtra(EXTRA_MESSAGE, message);
         startActivity(intent);
     }
