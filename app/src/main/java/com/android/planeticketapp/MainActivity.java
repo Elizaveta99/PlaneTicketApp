@@ -19,11 +19,10 @@ import java.util.Date;
 public class MainActivity extends AppCompatActivity {
     private static final String LOG_TAG =
             MainActivity.class.getSimpleName();
-
     public static final String EXTRA_MESSAGE =
             "com.android.planeticketapp.extra.MESSAGE";
-    private static Context context;
 
+    private static Context context;
 
     private PaymentController paymentController;
     private static String userId;
@@ -42,12 +41,10 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.e(LOG_TAG, "???");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         MainActivity.context = getApplicationContext();
         mLogin = findViewById(R.id.login);
-
     }
 
     public void orderTicket(View view) {
@@ -65,6 +62,6 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(MainActivity.context, OrderTicketActivity.class);
         intent.putExtra(EXTRA_MESSAGE, userId);
         Log.e(LOG_TAG, String.format("userId in authorize = %s", userId));
-        MainActivity.context.startActivity(intent);  // can't execute from static
+        MainActivity.context.startActivity(intent);
     }
 }

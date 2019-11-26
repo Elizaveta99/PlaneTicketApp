@@ -29,10 +29,7 @@ public class PaymentController {
         paymentService = PaymentServiceClient.getRetrofitInstance().
                 create(PlaneTicketServiceInterface.class);
 
-
         progressDialog = new ProgressDialog(MainActivity.getContext());
-        //progressDialog = new ProgressDialog(MainActivity.getContext());
-
 
         progressDialog.setMessage("Loading...");
         //progressDialog.show();

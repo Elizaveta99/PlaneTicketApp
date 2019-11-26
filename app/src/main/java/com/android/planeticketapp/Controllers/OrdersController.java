@@ -24,13 +24,11 @@ public class OrdersController {
             OrdersController.class.getSimpleName();
 
     private PlaneTicketServiceInterface service;
-    //public MainActivity mainActivity;
 
     private String userId;
 
     public OrdersController(String userId){
         this.userId = userId;
-        //this.mainActivity = _mainActivity;
 
         service = PlaneTicketServiceClient.getRetrofitInstance().create(PlaneTicketServiceInterface.class);
         Log.e(LOG_TAG, "constructor ordersController");
@@ -43,7 +41,6 @@ public class OrdersController {
         if(message != null)
             initialMessage +=  " " + message;
         Toast.makeText(MainActivity.getContext(), initialMessage, Toast.LENGTH_SHORT).show();
-        //Toast.makeText(MainActivity.getContext(), initialMessage, Toast.LENGTH_SHORT).show();
     }
 
     //add
@@ -54,11 +51,7 @@ public class OrdersController {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 user[0] = response.body();
-                //change activity
-                //MainActivity.foSmth(), doSmth - static
                 Log.e(LOG_TAG, "authorize from ordersController");
-                //MainActivity mA = new MainActivity();
-                //mA.authorize();
                 MainActivity.authorize();
             }
             @Override
@@ -78,6 +71,8 @@ public class OrdersController {
                 routes[0] = response.body();
                 //next
                 //pass list of routes - routes[0]
+                Log.e(LOG_TAG, "readRoutes from ordersController");
+                OrderTicketActivity.showFullUserFlightsInfo(routes[0]);
             }
             @Override
             public void onFailure(Call<ArrayList<Route>> call, Throwable t) {
