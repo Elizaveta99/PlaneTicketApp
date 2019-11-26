@@ -1,9 +1,11 @@
 package com.android.planeticketapp.Controllers;
 
+import android.util.Log;
 import android.widget.Toast;
 import com.android.planeticketapp.MainActivity;
 import com.android.planeticketapp.Models.Route;
 import com.android.planeticketapp.Models.User;
+import com.android.planeticketapp.OrderTicketActivity;
 import com.android.planeticketapp.ServiceAPI.PlaneTicketServiceClient;
 import com.android.planeticketapp.ServiceAPI.PlaneTicketServiceInterface;
 import com.android.planeticketapp.R;
@@ -15,14 +17,25 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.android.planeticketapp.MainActivity.*;
+
 public class OrdersController {
+    private static final String LOG_TAG =
+            OrdersController.class.getSimpleName();
+
     private PlaneTicketServiceInterface service;
+    //public MainActivity mainActivity;
 
     private String userId;
 
     public OrdersController(String userId){
         this.userId = userId;
+        //this.mainActivity = _mainActivity;
+
         service = PlaneTicketServiceClient.getRetrofitInstance().create(PlaneTicketServiceInterface.class);
+        Log.e(LOG_TAG, "constructor ordersController");
+
+
     }
 
     private void showError(String message){
@@ -30,6 +43,7 @@ public class OrdersController {
         if(message != null)
             initialMessage +=  " " + message;
         Toast.makeText(MainActivity.getContext(), initialMessage, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(MainActivity.getContext(), initialMessage, Toast.LENGTH_SHORT).show();
     }
 
     //add
@@ -42,6 +56,10 @@ public class OrdersController {
                 user[0] = response.body();
                 //change activity
                 //MainActivity.foSmth(), doSmth - static
+                Log.e(LOG_TAG, "authorize from ordersController");
+                //MainActivity mA = new MainActivity();
+                //mA.authorize();
+                MainActivity.authorize();
             }
             @Override
             public void onFailure(Call<User> call, Throwable t) {

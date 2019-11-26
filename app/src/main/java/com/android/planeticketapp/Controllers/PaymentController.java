@@ -1,6 +1,7 @@
 package com.android.planeticketapp.Controllers;
 
 import android.app.ProgressDialog;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.android.planeticketapp.MainActivity;
@@ -16,6 +17,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class PaymentController {
+    private static final String LOG_TAG =
+            PaymentController.class.getSimpleName();
+
 
     private PlaneTicketServiceInterface paymentService;
     private ProgressDialog progressDialog;
@@ -24,10 +28,17 @@ public class PaymentController {
     public PaymentController(OrdersController ordersController){
         paymentService = PaymentServiceClient.getRetrofitInstance().
                 create(PlaneTicketServiceInterface.class);
+
+
         progressDialog = new ProgressDialog(MainActivity.getContext());
+        //progressDialog = new ProgressDialog(MainActivity.getContext());
+
+
         progressDialog.setMessage("Loading...");
-        progressDialog.show();
+        //progressDialog.show();
+
         this.ordersController = ordersController;
+        Log.e(LOG_TAG, "controller paymentController");
     }
 
     public void payForMethod(MethodDateUsage dates, final String methodName, final Route parameter){
@@ -56,6 +67,7 @@ public class PaymentController {
         if(payment.getStatusCode() == 201) {
             switch (method) {
                 case "getUser":
+                    Log.e(LOG_TAG, "authorize from paymentController");
                     ordersController.authorize(payment.getToken());
                     break;
                 case "getFullUserFlightsInfo":

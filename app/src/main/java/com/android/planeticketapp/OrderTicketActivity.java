@@ -5,11 +5,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.planeticketapp.Models.MethodDateUsage;
 import com.android.planeticketapp.Models.Route;
@@ -20,9 +25,9 @@ import java.util.List;
 
 import com.android.planeticketapp.Controllers.PaymentController;
 
-public class OrderTicketActivity extends AppCompatActivity {
+public class OrderTicketActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
     private static final String LOG_TAG =
-            MainActivity.class.getSimpleName();
+            OrderTicketActivity.class.getSimpleName();
 
     private PaymentController paymentController;
 
@@ -79,10 +84,9 @@ public class OrderTicketActivity extends AppCompatActivity {
     {
 
         Integer rows = flights.size();
-        Log.d(LOG_TAG, rows.toString());
-        //int columns = 5;
+        //Log.d(LOG_TAG, rows.toString());
 
-        TableLayout tableLayout = (TableLayout) findViewById(R.id.tableLayout);
+        TableLayout tableLayout = findViewById(R.id.tableLayout);
 
         tableLayout.setStretchAllColumns(true);  // ??
 
@@ -94,7 +98,7 @@ public class OrderTicketActivity extends AppCompatActivity {
 
             TextView textView1 = new TextView(this);
             textView1.setText(flights.get(i).getFrom());
-            tableRow.addView(textView1, 0);
+            tableRow.addView(textView1, 0);  // without index ??
 
             TextView textView2 = new TextView(this);
             textView2.setText(flights.get(i).getTo());
@@ -114,8 +118,50 @@ public class OrderTicketActivity extends AppCompatActivity {
 
             tableLayout.addView(tableRow, i);
         }
+    }
 
-        //setContentView(tableLayout);
+    public void edit(View view) {
+        //Getting the instance of Spinner and applying OnItemSelectedListener on it
+        Spinner spin = findViewById(R.id.spinner);
+        spin.setOnItemSelectedListener(this);
+
+        List<Route> allRoutes = new ArrayList<>();
+        allRoutes.add(new Route("1", "1", "1"));
+        allRoutes.get(0).setTime("1");
+        allRoutes.get(0).setPrice("1");
+        allRoutes.add(new Route("2", "2", "2"));
+        allRoutes.get(1).setTime("2");
+        allRoutes.get(1).setPrice("2");
+
+        // get allRoutes !!
+
+        List<String> fieldsFrom = new ArrayList<>();
+        for (Route st: allRoutes)
+            fieldsFrom.add(st.getFrom());
+        List<String> fieldsTo = new ArrayList<>();
+        for (Route st: allRoutes)
+            fieldsTo.add(st.getTo());
+        List<String> fieldsDate = new ArrayList<>();
+        for (Route st: allRoutes)
+            fieldsDate.add(st.getDate());
+
+        //Creating the ArrayAdapter instance having the bank name list
+        ArrayAdapter aa = new ArrayAdapter(this, android.R.layout.simple_spinner_item, fieldsFrom);
+        aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        //Setting the ArrayAdapter data on the Spinner
+        spin.setAdapter(aa);
+    }
+
+
+    //Performing action onItemSelected and onNothing selected
+    @Override
+    public void onItemSelected(AdapterView<?> arg0, View arg1, int position,long id) {
+        //Toast.makeText(getApplicationContext(), bankNames[position], Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> arg0) {
+// TODO Auto-generated method stub
 
     }
 }

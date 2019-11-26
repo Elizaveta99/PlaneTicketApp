@@ -17,12 +17,19 @@ import com.android.planeticketapp.Models.Route;
 import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
+    private static final String LOG_TAG =
+            MainActivity.class.getSimpleName();
+
+    public static final String EXTRA_MESSAGE =
+            "com.android.planeticketapp.extra.MESSAGE";
+    private static Context context;
+
 
     private PaymentController paymentController;
-    private String userId;
+    private static String userId;
 
     public static Context getContext(){
-        return getContext();
+        return MainActivity.context;
     }
 
     public void startAuthorize(){
@@ -31,31 +38,33 @@ public class MainActivity extends AppCompatActivity {
                 "getUser", null);
     }
 
-
-
-
-    private static final String LOG_TAG =
-            MainActivity.class.getSimpleName();
-
-    public static final String EXTRA_MESSAGE =
-            "com.android.planeticketapp.extra.MESSAGE";
-
-    private EditText mLogin;
+    private static EditText mLogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.e(LOG_TAG, "???");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        MainActivity.context = getApplicationContext();
         mLogin = findViewById(R.id.login);
+
     }
 
     public void orderTicket(View view) {
-        Log.d(LOG_TAG, "Button clicked!");
-        //startAuthorize();
-        Intent intent = new Intent(this, OrderTicketActivity.class);
+        Log.e(LOG_TAG, "Button clicked!");
         String message = mLogin.getText().toString();
         userId = message;
-        intent.putExtra(EXTRA_MESSAGE, message);
-        startActivity(intent);
+        Log.e(LOG_TAG, String.format("userId = %s", userId));
+        startAuthorize();
+        //authorize();
+
+    }
+
+    public static void authorize()
+    {
+        Intent intent = new Intent(MainActivity.context, OrderTicketActivity.class);
+        intent.putExtra(EXTRA_MESSAGE, userId);
+        Log.e(LOG_TAG, String.format("userId in authorize = %s", userId));
+        MainActivity.context.startActivity(intent);  // can't execute from static
     }
 }
