@@ -71,7 +71,7 @@ public class OrdersController {
                 routes[0] = response.body();
                 //next
                 //pass list of routes - routes[0]
-                Log.e(LOG_TAG, "readRoutes from ordersController");
+                Log.e(LOG_TAG, String.format("readRoutes from ordersController %d", routes[0].size())); // size = 0 ?
                 OrderTicketActivity.showFullUserFlightsInfo(routes[0]);
             }
             @Override
@@ -105,6 +105,8 @@ public class OrdersController {
                     uniqueRoutes.add(new Route(fromList.get(i), toList.get(i), dateList.get(i)));
                 }
                 //call next with uniqueRoutes
+                Log.e(LOG_TAG, String.format("readAllRoutes from ordersController")); // size = 0 ?
+                OrderTicketActivity.setAllRoutes(uniqueRoutes); // ??
             }
             @Override
             public void onFailure(Call<ArrayList<Route>> call, Throwable t) {
