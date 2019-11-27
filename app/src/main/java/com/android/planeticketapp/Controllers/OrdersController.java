@@ -105,7 +105,7 @@ public class OrdersController {
                     uniqueRoutes.add(new Route(fromList.get(i), toList.get(i), dateList.get(i)));
                 }
                 //call next with uniqueRoutes
-                Log.e(LOG_TAG, String.format("readAllRoutes from ordersController")); // size = 0 ?
+                Log.e(LOG_TAG, String.format("readAllRoutes from ordersController = %d", uniqueRoutes.size())); // size = 0 ?
                 OrderTicketActivity.setAllRoutes(uniqueRoutes); // ??
             }
             @Override

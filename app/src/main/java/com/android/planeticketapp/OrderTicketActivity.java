@@ -40,7 +40,6 @@ public class OrderTicketActivity extends AppCompatActivity implements AdapterVie
     }
 
     private PaymentController paymentController;
-
     private void startReadRoutes(){
         paymentController.payForMethod(new MethodDateUsage(new Date(), new Date()),
                 "getFullUserFlightsInfo", null);
@@ -69,11 +68,17 @@ public class OrderTicketActivity extends AppCompatActivity implements AdapterVie
 
 
     private static List<Route> allRoutes = new ArrayList<>();
-
     public static void setAllRoutes(List<Route> routes)
     {
         allRoutes = routes;
     }
+
+    private static List<CheckBox> listCheckBoxes = new ArrayList<>();
+    //private static List<TextView>[] tableTextViews = new ArrayList[]{new ArrayList<>()};
+    private static ArrayList<ArrayList<TextView> > tableTextViews = new ArrayList<ArrayList<TextView> >();
+    private static Spinner spin1 = null;
+    private static Spinner spin2 = null;
+    private static Spinner spin3 = null;
 
 
     @Override
@@ -126,7 +131,7 @@ public class OrderTicketActivity extends AppCompatActivity implements AdapterVie
                 LayoutParams.MATCH_PARENT));
 
         //Getting the instance of Spinner and applying OnItemSelectedListener on it
-        Spinner spin1 = new Spinner(this);
+        spin1 = new Spinner(this);
         tableRow1.addView(spin1);
         //Spinner spin1 = findViewById(R.id.spinner1);
         spin1.setOnItemSelectedListener(this);
@@ -136,14 +141,14 @@ public class OrderTicketActivity extends AppCompatActivity implements AdapterVie
         //Setting the ArrayAdapter data on the Spinner
         spin1.setAdapter(a1);
 
-        Spinner spin2 = new Spinner(this);
+        spin2 = new Spinner(this);
         tableRow1.addView(spin2);
         spin2.setOnItemSelectedListener(this);
         ArrayAdapter a2 = new ArrayAdapter(this, android.R.layout.simple_spinner_item, fieldsTo);
         a2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spin2.setAdapter(a2);
 
-        Spinner spin3 = new Spinner(this);
+        spin3 = new Spinner(this);
         tableRow1.addView(spin3);
         spin3.setOnItemSelectedListener(this);
         ArrayAdapter a3 = new ArrayAdapter(this, android.R.layout.simple_spinner_item, fieldsDate);
@@ -186,18 +191,7 @@ public class OrderTicketActivity extends AppCompatActivity implements AdapterVie
         tableLayout.addView(tableRow, 1);
 
 
-
         startReadRoutes(); // оплата
-
-        //test
-//        List<Route> flights = new ArrayList<>();
-//        flights.add(new Route("1", "1", "1"));
-//        flights.get(0).setTime("1");
-//        flights.get(0).setPrice("1");
-//        flights.add(new Route("2", "2", "2"));
-//        flights.get(1).setTime("2");
-//        flights.get(1).setPrice("2");
-        //showFullUserFlightsInfo(flights);
 
     }
 
@@ -213,12 +207,10 @@ public class OrderTicketActivity extends AppCompatActivity implements AdapterVie
         flights.get(1).setPrice("2");
 
         Integer rows = flights.size();
-        Log.d(LOG_TAG, rows.toString());
-
-        //TableLayout tableLayout = findViewById(R.id.tableLayout);
-
+        Log.e(LOG_TAG, rows.toString());
 
         for (int i = 2; i < rows + 2; i++) {
+            ArrayList<TextView> rowTextViewList = new ArrayList<TextView>();
 
             TableRow tableRow = new TableRow(OrderTicketActivity.context);
             tableRow.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
@@ -227,32 +219,54 @@ public class OrderTicketActivity extends AppCompatActivity implements AdapterVie
             TextView textView1 = new TextView(OrderTicketActivity.context);
             textView1.setText(flights.get(i - 2).getFrom());
             tableRow.addView(textView1, 0);  // without index ??
+            rowTextViewList.add(textView1);
+            //tableTextViews
 
             TextView textView2 = new TextView(OrderTicketActivity.context);
             textView2.setText(flights.get(i - 2).getTo());
             tableRow.addView(textView2, 1);
+            rowTextViewList.add(textView2);
 
             TextView textView3 = new TextView(OrderTicketActivity.context);
             textView3.setText(flights.get(i - 2).getDate());
             tableRow.addView(textView3, 2);
+            rowTextViewList.add(textView3);
 
             TextView textView4 = new TextView(OrderTicketActivity.context);
             textView4.setText(flights.get(i - 2).getTime());
             tableRow.addView(textView4, 3);
+            rowTextViewList.add(textView4);
 
             TextView textView5 = new TextView(OrderTicketActivity.context);
             textView5.setText(flights.get(i - 2).getPrice());
             tableRow.addView(textView5, 4);
+            rowTextViewList.add(textView5);
 
             CheckBox checkBox1 = new CheckBox(OrderTicketActivity.context);
             tableRow.addView(checkBox1);
+            listCheckBoxes.add(checkBox1);
+
             tableLayout.addView(tableRow, i);
+            tableTextViews.add(rowTextViewList);
         }
     }
 
     public void edit(View view) {
         //String.valueOf(spinner.getSelectedItem()) - забрать выбранный элемент
-
+        int rowIndex = -1;
+        for (CheckBox ch: listCheckBoxes)
+        {
+            rowIndex++;
+            if (ch.isChecked())
+            {
+                //int rowIndex = ((TableLayout)((TableRow)ch.getParent()).getParent()).indexOfChild(ch) - 2; // ??
+                Log.e(LOG_TAG, String.format("checkbox is checked on row: %d", rowIndex));
+                tableTextViews.get(rowIndex).get(0).setText(String.valueOf(spin1.getSelectedItem()));
+                tableTextViews.get(rowIndex).get(1).setText(String.valueOf(spin2.getSelectedItem()));
+                tableTextViews.get(rowIndex).get(2).setText(String.valueOf(spin3.getSelectedItem()));
+                break;
+            }
+        }
     }
 
 
@@ -264,7 +278,7 @@ public class OrderTicketActivity extends AppCompatActivity implements AdapterVie
         String item = parent.getItemAtPosition(position).toString();
 
         // Showing selected spinner item
-        Toast.makeText(parent.getContext(), "Selected: " + item, Toast.LENGTH_LONG).show();
+        //Toast.makeText(parent.getContext(), "Selected: " + item, Toast.LENGTH_LONG).show();
     }
 
     @Override
