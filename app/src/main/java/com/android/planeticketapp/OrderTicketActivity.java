@@ -280,6 +280,18 @@ public class OrderTicketActivity extends AppCompatActivity implements AdapterVie
         }
     }
 
+    private static boolean isUpdated = false;
+    public static Route updatedRoute;
+    public static void setUpdatedRoute(Route _updatedRoute)
+    {
+        updatedRoute = _updatedRoute;
+        isUpdated = true;
+    }
+    public static Route getUpdatedRoute()
+    {
+        return updatedRoute;
+    }
+
     public void edit(View view) {
         ArrayAdapter a1 = new ArrayAdapter(this, android.R.layout.simple_spinner_item, fieldsFrom);
         a1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -351,19 +363,6 @@ public class OrderTicketActivity extends AppCompatActivity implements AdapterVie
 
     }
 
-
-    private static boolean isUpdated = false;
-    public static Route updatedRoute;
-    public static void setUpdatedRoute(Route _updatedRoute)
-    {
-        updatedRoute = _updatedRoute;
-        isUpdated = true;
-    }
-    public static Route getUpdatedRoute()
-    {
-        return updatedRoute;
-    }
-
     //Performing action onItemSelected and onNothing selected
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position,long id) {
@@ -394,7 +393,12 @@ public class OrderTicketActivity extends AppCompatActivity implements AdapterVie
         return addedRoute;
     }
 
+
+    private int countAdd = 0;
+
     public void add(View view) {
+        countAdd = 0;
+
         ArrayAdapter a1 = new ArrayAdapter(this, android.R.layout.simple_spinner_item, fieldsFrom);
         a1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         //Setting the ArrayAdapter data on the Spinner
@@ -407,10 +411,6 @@ public class OrderTicketActivity extends AppCompatActivity implements AdapterVie
         ArrayAdapter a3 = new ArrayAdapter(this, android.R.layout.simple_spinner_item, fieldsDate);
         a3.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spin3.setAdapter(a3);
-
-
-
-
 
         ArrayList<TextView> rowTextViewList = new ArrayList<TextView>();
 
@@ -490,6 +490,8 @@ public class OrderTicketActivity extends AppCompatActivity implements AdapterVie
     }
 
     public void saveAdd(View view) {
+        countAdd++;
+
         int rowIndex = rowIndexGlob;
 
         //while (true)
@@ -509,7 +511,9 @@ public class OrderTicketActivity extends AppCompatActivity implements AdapterVie
                 //Log.e(LOG_TAG, String.format("Old id =  %s", userFlights.get(rowIndex).getId()));
                 tempAddedRoute.setId(""); // don't know id yet
 
-                startAddRoute(tempAddedRoute); // setAddedRoute - in OrdersController
+                if (countAdd == 1) {
+                    startAddRoute(tempAddedRoute); // setAddedRoute - in OrdersController
+                }
 
             }
         //}
