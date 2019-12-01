@@ -123,6 +123,7 @@ public class OrdersController {
             public void onResponse(Call<Route> call, Response<Route> response) {
                 Route newRoute = response.body();
                 //next to do
+                OrderTicketActivity.setAddedRoute(newRoute);
             }
             @Override
             public void onFailure(Call<Route> call, Throwable t) {
@@ -139,6 +140,8 @@ public class OrdersController {
             public void onResponse(Call<Route> call, Response<Route> response) {
                 Route updatedRoute = response.body();
                 //next to do
+                Log.e(LOG_TAG, String.format("Updated route from = %s", updatedRoute.getFrom()));
+                OrderTicketActivity.setUpdatedRoute(updatedRoute);
             }
             @Override
             public void onFailure(Call<Route> call, Throwable t) {

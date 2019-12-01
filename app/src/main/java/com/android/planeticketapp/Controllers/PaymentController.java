@@ -43,16 +43,20 @@ public class PaymentController {
         payment[0] = new PaymentResponse();
         Call<PaymentResponse> call = paymentService.payForMethod("PlaneTicketService",
                 methodName, dates);
+        Log.e(LOG_TAG, "waiting for payForMethod");
+
         call.enqueue(new Callback<PaymentResponse>() {
             @Override
             public void onResponse(Call<PaymentResponse> call, Response<PaymentResponse> response) {
                 progressDialog.dismiss();
                 payment[0] = response.body();
+                Log.e(LOG_TAG, "response payForMethod");
                 callFunctionContinue(methodName, payment[0], parameter);
             }
             @Override
             public void onFailure(Call<PaymentResponse> call, Throwable t) {
                 progressDialog.dismiss();
+                Log.e(LOG_TAG, "failure for payForMethod");
                 Toast.makeText(MainActivity.getContext(),
                         MainActivity.getContext().getString(R.string.errorMessage)
                                 + " " + t.getMessage(), Toast.LENGTH_SHORT).show();
