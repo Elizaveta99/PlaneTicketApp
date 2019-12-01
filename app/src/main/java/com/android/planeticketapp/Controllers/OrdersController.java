@@ -160,6 +160,7 @@ public class OrdersController {
                 if(code == -1)
                     onFailure(call, null);
                 //next
+                OrderTicketActivity.setDeleted();
             }
             @Override
             public void onFailure(Call<Integer> call, Throwable t) {

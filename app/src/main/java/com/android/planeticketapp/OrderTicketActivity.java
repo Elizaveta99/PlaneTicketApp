@@ -34,7 +34,6 @@ public class OrderTicketActivity extends AppCompatActivity implements AdapterVie
 
     private static Context context;
     private String userId;
-
     public static Context getContext(){
         return OrderTicketActivity.context;
     }
@@ -83,19 +82,15 @@ public class OrderTicketActivity extends AppCompatActivity implements AdapterVie
         fieldsDate.add("");
         for (Route st: allRoutes)
             fieldsDate.add(st.getDate());
-
-
-
-
-
     }
+
+
     public ArrayList<Route> getAllRoutes()
     {
         return  allRoutes;
     }
 
     private static List<CheckBox> listCheckBoxes = new ArrayList<>();
-    //private static List<TextView>[] tableTextViews = new ArrayList[]{new ArrayList<>()};
     private static ArrayList<ArrayList<TextView> > tableTextViews = new ArrayList<ArrayList<TextView> >();
     private static List<Route> userFlights = new ArrayList<Route>();
     private static Spinner spin1 = null;
@@ -105,6 +100,7 @@ public class OrderTicketActivity extends AppCompatActivity implements AdapterVie
     public static List<String> fieldsTo = new ArrayList<>();
     public static List<String> fieldsDate = new ArrayList<>();
 
+    private static TableLayout tableLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,38 +117,8 @@ public class OrderTicketActivity extends AppCompatActivity implements AdapterVie
         userId = login;
         helloMessage.setText("Hello, " + login);
 
-
-
-
-
-        // get allRoutes !!
+        // get allRoutes 
         startReadAllRoutes();
-        //test
-        //List<Route> allRoutes = new ArrayList<>();
-//        allRoutes.add(new Route("1", "11", "111"));
-//        allRoutes.get(0).setTime("1111");
-//        allRoutes.get(0).setPrice("111111");
-//        allRoutes.add(new Route("2", "22", "222"));
-//        allRoutes.get(1).setTime("2222");
-//        allRoutes.get(1).setPrice("22222");
-
-
-//        ArrayList<Route> tempRoutes = getAllRoutes();
-//        Log.e(LOG_TAG, String.format("size of tempRoutes = %d", tempRoutes.size()));
-//
-//        List<String> fieldsFrom = new ArrayList<>();
-//        for (Route st: tempRoutes)
-//            fieldsFrom.add(st.getFrom());
-//        Log.e(LOG_TAG, String.format("amount od fieldsFrom first = %d", fieldsFrom.size()));
-//
-//        List<String> fieldsTo = new ArrayList<>();
-//        for (Route st: tempRoutes)
-//            fieldsTo.add(st.getTo());
-//        List<String> fieldsDate = new ArrayList<>();
-//        for (Route st: tempRoutes)
-//            fieldsDate.add(st.getDate());
-
-
 
         TableRow tableRow = new TableRow(this);
         tableRow.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
@@ -184,7 +150,7 @@ public class OrderTicketActivity extends AppCompatActivity implements AdapterVie
         tableLayout.addView(tableRow, 0);
 
 
-//        // add spinners
+        // add spinners
         TableRow tableRow1 = new TableRow(this);
         tableRow1.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
                 LayoutParams.MATCH_PARENT));
@@ -221,17 +187,8 @@ public class OrderTicketActivity extends AppCompatActivity implements AdapterVie
 
     }
 
-    private static TableLayout tableLayout;
-
     public static void showFullUserFlightsInfo(List<Route> flights)
     {
-//        flights.add(new Route("1", "1", "1"));
-//        flights.get(0).setTime("1");
-//        flights.get(0).setPrice("1");
-//        flights.add(new Route("2", "2", "2"));
-//        flights.get(1).setTime("2");
-//        flights.get(1).setPrice("2");
-
         userFlights = flights;
         Log.e(LOG_TAG, String.format("userFlightsSize = %d", userFlights.size()));
 
@@ -249,7 +206,6 @@ public class OrderTicketActivity extends AppCompatActivity implements AdapterVie
             textView1.setText(flights.get(i - 2).getFrom());
             tableRow.addView(textView1, 0);  // without index ??
             rowTextViewList.add(textView1);
-            //tableTextViews
 
             TextView textView2 = new TextView(OrderTicketActivity.context);
             textView2.setText(flights.get(i - 2).getTo());
@@ -292,7 +248,11 @@ public class OrderTicketActivity extends AppCompatActivity implements AdapterVie
         return updatedRoute;
     }
 
+    private int countEdit = 0;
+
     public void edit(View view) {
+        countEdit = 0;
+
         ArrayAdapter a1 = new ArrayAdapter(this, android.R.layout.simple_spinner_item, fieldsFrom);
         a1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         //Setting the ArrayAdapter data on the Spinner
@@ -312,6 +272,8 @@ public class OrderTicketActivity extends AppCompatActivity implements AdapterVie
 
 
     public void save(View view) {
+        countEdit++;
+
         Log.e(LOG_TAG, String.format("amount od fieldsFrom in edit = %d", fieldsFrom.size()));
 
         int rowIndex = -1;
@@ -320,7 +282,6 @@ public class OrderTicketActivity extends AppCompatActivity implements AdapterVie
             rowIndex++;
             if (ch.isChecked())
             {
-                //int rowIndex = ((TableLayout)((TableRow)ch.getParent()).getParent()).indexOfChild(ch) - 2; // ??
                 Log.e(LOG_TAG, String.format("checkbox is checked on row: %d", rowIndex));
                 tableTextViews.get(rowIndex).get(0).setText(String.valueOf(spin1.getSelectedItem()));
                 tableTextViews.get(rowIndex).get(1).setText(String.valueOf(spin2.getSelectedItem()));
@@ -336,19 +297,9 @@ public class OrderTicketActivity extends AppCompatActivity implements AdapterVie
 
                 Log.e(LOG_TAG, String.format("Updated FROM =  %s", tempUpdatedRoute.getFrom()));
 
-                startUpdateRoute(tempUpdatedRoute); // setUpdatedRoute - in OrdersController
-
-
-
-
-//                        Log.e(LOG_TAG, String.format("New FROM =  %s", updatedRoute.getFrom()));
-//
-//                        tableTextViews.get(rowIndex).get(0).setText(updatedRoute.getFrom());
-//                        tableTextViews.get(rowIndex).get(1).setText(updatedRoute.getTo());
-//                        tableTextViews.get(rowIndex).get(2).setText(updatedRoute.getDate());
-//                        tableTextViews.get(rowIndex).get(3).setText(updatedRoute.getTime());
-//                        tableTextViews.get(rowIndex).get(4).setText(updatedRoute.getPrice());
-
+                if (countEdit == 1) {
+                    startUpdateRoute(tempUpdatedRoute); // setUpdatedRoute - in OrdersController
+                }
                 break;
             }
         }
@@ -366,8 +317,6 @@ public class OrderTicketActivity extends AppCompatActivity implements AdapterVie
     //Performing action onItemSelected and onNothing selected
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position,long id) {
-        //Toast.makeText(getApplicationContext(), bankNames[position], Toast.LENGTH_LONG).show();
-        // On selecting a spinner item
         String item = parent.getItemAtPosition(position).toString();
 
         // Showing selected spinner item
@@ -422,7 +371,6 @@ public class OrderTicketActivity extends AppCompatActivity implements AdapterVie
         textView1.setText(".");
         tableRow.addView(textView1, 0);  // without index ??
         rowTextViewList.add(textView1);
-        //tableTextViews
 
         TextView textView2 = new TextView(OrderTicketActivity.context);
         textView2.setText(".");
@@ -452,51 +400,16 @@ public class OrderTicketActivity extends AppCompatActivity implements AdapterVie
         tableLayout.addView(tableRow, tableTextViews.size() + 2); // ?? index of row in table -  ?
         tableTextViews.add(rowTextViewList);
 
-
         int rowIndex = tableTextViews.size() - 1; // ??
         Log.e(LOG_TAG, String.format("adding on row: %d", rowIndex));
         rowIndexGlob = rowIndex;
-
-//        while (true)
-//        {
-//            Log.e(LOG_TAG, String.format("number of row to add: %d", rowIndex));
-//            if (listCheckBoxes.get(rowIndex).isChecked())
-//            {
-//                tableTextViews.get(rowIndex).get(0).setText(String.valueOf(spin1.getSelectedItem()));
-//                tableTextViews.get(rowIndex).get(1).setText(String.valueOf(spin2.getSelectedItem()));
-//                tableTextViews.get(rowIndex).get(2).setText(String.valueOf(spin3.getSelectedItem()));
-//                Route tempAddedRoute = new Route(tableTextViews.get(rowIndex).get(0).getText().toString(),
-//                        tableTextViews.get(rowIndex).get(1).getText().toString(),
-//                        tableTextViews.get(rowIndex).get(2).getText().toString());
-//                tempAddedRoute.setTime("");
-//                tempAddedRoute.setPrice("");
-//                //Log.e(LOG_TAG, String.format("userFlightsSize in edit = %d", userFlights.size()));
-//                //Log.e(LOG_TAG, String.format("Old id =  %s", userFlights.get(rowIndex).getId()));
-//                tempAddedRoute.setId(""); // don't know id yet
-//
-//                startAddRoute(tempAddedRoute); // setAddedRoute - in OrdersController
-//                userFlights.add(getAddedRoute());
-//                // вылетает на индексе??
-//                //TextView temp  = new TextView(this);
-//                //temp.setText(getAddedRoute().getTime());
-//                //tableTextViews.get(rowIndex).set(3, temp);
-//                tableTextViews.get(rowIndex).get(3).setText(getAddedRoute().getTime());
-//                tableTextViews.get(rowIndex).get(4).setText(getAddedRoute().getPrice());
-//
-//                break;
-//            }
-//        }
-
     }
 
     public void saveAdd(View view) {
         countAdd++;
-
         int rowIndex = rowIndexGlob;
 
-        //while (true)
-        //{
-            Log.e(LOG_TAG, String.format("number of row to add: %d", rowIndex));
+            Log.e(LOG_TAG, String.format("number of row to add: %d countAdd = %d", rowIndex, countAdd));
             if (listCheckBoxes.get(rowIndex).isChecked())
             {
                 tableTextViews.get(rowIndex).get(0).setText(String.valueOf(spin1.getSelectedItem()));
@@ -507,8 +420,6 @@ public class OrderTicketActivity extends AppCompatActivity implements AdapterVie
                         tableTextViews.get(rowIndex).get(2).getText().toString());
                 tempAddedRoute.setTime("");
                 tempAddedRoute.setPrice("");
-                //Log.e(LOG_TAG, String.format("userFlightsSize in edit = %d", userFlights.size()));
-                //Log.e(LOG_TAG, String.format("Old id =  %s", userFlights.get(rowIndex).getId()));
                 tempAddedRoute.setId(""); // don't know id yet
 
                 if (countAdd == 1) {
@@ -516,19 +427,57 @@ public class OrderTicketActivity extends AppCompatActivity implements AdapterVie
                 }
 
             }
-        //}
 
 
         if (isAddedRoute == true) {
             Log.e(LOG_TAG, String.format("isAdded is true"));
-            //userFlights.set(rowIndex, addedRoute);
-            userFlights.add(getAddedRoute());
+            userFlights.add(addedRoute);
             isAddedRoute = false;
             tableTextViews.get(rowIndex).get(3).setText(addedRoute.getTime());
             tableTextViews.get(rowIndex).get(4).setText(addedRoute.getPrice());
         }
     }
 
+
+    private static boolean isDeleted = false;
+    public static void setDeleted()
+    {
+        isDeleted = true;
+    }
+
+    private int countDelete = 0;
+    private int rowIndexDelete = -1;
+
+    public void delete(View view) {
+
+        countDelete = 0;
+
+        countDelete++;
+        int rowIndex = -1;
+        for (CheckBox ch: listCheckBoxes) {
+            rowIndex++;
+            if (ch.isChecked()) {
+                Route tempDeletedRoute = userFlights.get(rowIndex);
+                if (countDelete == 1)
+                {
+                    rowIndexDelete = rowIndex;
+                    startDeleteRoute(tempDeletedRoute);
+                }
+                break;
+            }
+        }
+
+    }
+
     public void saveDelete(View view) {
+        if (isDeleted == true) {
+            Log.e(LOG_TAG, String.format("isDeleted is true"));
+            userFlights.remove(rowIndexDelete);
+            View deletedRow = (View)listCheckBoxes.get(rowIndexDelete).getParent();
+            tableTextViews.remove(rowIndexDelete);
+            listCheckBoxes.remove(rowIndexDelete);
+            tableLayout.removeView(deletedRow);
+            isDeleted = false;
+        }
     }
 }
