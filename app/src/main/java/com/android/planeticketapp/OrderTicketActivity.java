@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Spinner;
 import android.widget.TableLayout;
@@ -45,7 +46,7 @@ public class OrderTicketActivity extends AppCompatActivity implements AdapterVie
     }
 
     private void startReadAllRoutes(){
-        paymentController = new PaymentController(new OrdersController(userId));
+        paymentController = new PaymentController(new OrdersController(userId), this);
         paymentController.payForMethod(new MethodDateUsage(new Date(), new Date()),
                     "getFlightsInfo", null);
     }
@@ -102,11 +103,17 @@ public class OrderTicketActivity extends AppCompatActivity implements AdapterVie
 
     private static TableLayout tableLayout;
 
+    private Button save;
+    private Button saveAdd;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_ticket);
         OrderTicketActivity.context = getApplicationContext();
+
+        save = findViewById(R.id.saveEditButton);
+        saveAdd = findViewById(R.id.saveAddButton);
 
         tableLayout = findViewById(R.id.tableLayout);
         tableLayout.setStretchAllColumns(true);  // ??
@@ -117,7 +124,7 @@ public class OrderTicketActivity extends AppCompatActivity implements AdapterVie
         userId = login;
         helloMessage.setText("Hello, " + login);
 
-        // get allRoutes 
+        // get allRoutes
         startReadAllRoutes();
 
         TableRow tableRow = new TableRow(this);
@@ -238,10 +245,11 @@ public class OrderTicketActivity extends AppCompatActivity implements AdapterVie
 
     private static boolean isUpdated = false;
     public static Route updatedRoute;
-    public static void setUpdatedRoute(Route _updatedRoute)
+    public void setUpdatedRoute(Route _updatedRoute)
     {
         updatedRoute = _updatedRoute;
         isUpdated = true;
+        save.callOnClick();
     }
     public static Route getUpdatedRoute()
     {
@@ -269,14 +277,31 @@ public class OrderTicketActivity extends AppCompatActivity implements AdapterVie
     }
 
     private int rowIndexGlob;
-
+    private int rowEditIndexGlob;
 
     public void save(View view) {
+
         countEdit++;
+
+        Log.e(LOG_TAG, String.format("CountEdit = %d", countEdit));
+
+
+        if (isUpdated == true)
+        //if (countEdit % 2 == 0)
+        {
+            Log.e(LOG_TAG, String.format("isUpdated is true"));
+            userFlights.set(rowEditIndexGlob, updatedRoute);
+            isUpdated = false;
+            tableTextViews.get(rowEditIndexGlob).get(3).setText(updatedRoute.getTime());
+            tableTextViews.get(rowEditIndexGlob).get(4).setText(updatedRoute.getPrice());
+        }
+
+
 
         Log.e(LOG_TAG, String.format("amount od fieldsFrom in edit = %d", fieldsFrom.size()));
 
         int rowIndex = -1;
+
         for (CheckBox ch: listCheckBoxes)
         {
             rowIndex++;
@@ -297,20 +322,17 @@ public class OrderTicketActivity extends AppCompatActivity implements AdapterVie
 
                 Log.e(LOG_TAG, String.format("Updated FROM =  %s", tempUpdatedRoute.getFrom()));
 
+                rowEditIndexGlob = rowIndex;
+
                 if (countEdit == 1) {
                     startUpdateRoute(tempUpdatedRoute); // setUpdatedRoute - in OrdersController
                 }
+
                 break;
             }
         }
 
-        if (isUpdated == true) {
-            Log.e(LOG_TAG, String.format("isUpdated is true"));
-            userFlights.set(rowIndex, updatedRoute);
-            isUpdated = false;
-            tableTextViews.get(rowIndex).get(3).setText(updatedRoute.getTime());
-            tableTextViews.get(rowIndex).get(4).setText(updatedRoute.getPrice());
-        }
+
 
     }
 
@@ -331,10 +353,11 @@ public class OrderTicketActivity extends AppCompatActivity implements AdapterVie
 
     private static boolean isAddedRoute = false;
     public static Route addedRoute;
-    public static void setAddedRoute(Route _addedRoute)
+    public void setAddedRoute(Route _addedRoute)
     {
         addedRoute = _addedRoute;
         isAddedRoute = true;
+        saveAdd.callOnClick();
 
     }
     public static Route getAddedRoute()
@@ -405,8 +428,19 @@ public class OrderTicketActivity extends AppCompatActivity implements AdapterVie
         rowIndexGlob = rowIndex;
     }
 
+    private int rowAddIndexGlob;
+
     public void saveAdd(View view) {
         countAdd++;
+
+        if (isAddedRoute == true) {
+            Log.e(LOG_TAG, String.format("isAdded is true"));
+            userFlights.add(addedRoute);
+            isAddedRoute = false;
+            tableTextViews.get(rowAddIndexGlob).get(3).setText(addedRoute.getTime());
+            tableTextViews.get(rowAddIndexGlob).get(4).setText(addedRoute.getPrice());
+        }
+
         int rowIndex = rowIndexGlob;
 
             Log.e(LOG_TAG, String.format("number of row to add: %d countAdd = %d", rowIndex, countAdd));
@@ -422,6 +456,8 @@ public class OrderTicketActivity extends AppCompatActivity implements AdapterVie
                 tempAddedRoute.setPrice("");
                 tempAddedRoute.setId(""); // don't know id yet
 
+                rowAddIndexGlob = rowIndex;
+
                 if (countAdd == 1) {
                     startAddRoute(tempAddedRoute); // setAddedRoute - in OrdersController
                 }
@@ -429,13 +465,7 @@ public class OrderTicketActivity extends AppCompatActivity implements AdapterVie
             }
 
 
-        if (isAddedRoute == true) {
-            Log.e(LOG_TAG, String.format("isAdded is true"));
-            userFlights.add(addedRoute);
-            isAddedRoute = false;
-            tableTextViews.get(rowIndex).get(3).setText(addedRoute.getTime());
-            tableTextViews.get(rowIndex).get(4).setText(addedRoute.getPrice());
-        }
+
     }
 
 

@@ -31,8 +31,10 @@ public class MainActivity extends AppCompatActivity {
         return MainActivity.context;
     }
 
+    OrderTicketActivity orderTicketActivity;
+
     public void startAuthorize(){
-        paymentController = new PaymentController(new OrdersController(userId));
+        paymentController = new PaymentController(new OrdersController(userId), orderTicketActivity);
         paymentController.payForMethod(new MethodDateUsage(new Date(), new Date()),
                 "getUser", null);
     }

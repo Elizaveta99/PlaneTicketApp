@@ -25,6 +25,8 @@ public class OrdersController {
 
     private PlaneTicketServiceInterface service;
 
+    public OrderTicketActivity orderTicketActivity;
+
     private String userId;
 
     public OrdersController(String userId){
@@ -47,6 +49,8 @@ public class OrdersController {
     public void authorize(String token){
         final User[] user = new User[1];
         Call<User> call = service.authorize(userId, token);
+        Log.e(LOG_TAG, token);
+
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
@@ -123,7 +127,7 @@ public class OrdersController {
             public void onResponse(Call<Route> call, Response<Route> response) {
                 Route newRoute = response.body();
                 //next to do
-                OrderTicketActivity.setAddedRoute(newRoute);
+                orderTicketActivity.setAddedRoute(newRoute);
             }
             @Override
             public void onFailure(Call<Route> call, Throwable t) {
@@ -141,7 +145,7 @@ public class OrdersController {
                 Route updatedRoute = response.body();
                 //next to do
                 Log.e(LOG_TAG, String.format("Updated route from = %s", updatedRoute.getFrom()));
-                OrderTicketActivity.setUpdatedRoute(updatedRoute);
+                orderTicketActivity.setUpdatedRoute(updatedRoute);
             }
             @Override
             public void onFailure(Call<Route> call, Throwable t) {

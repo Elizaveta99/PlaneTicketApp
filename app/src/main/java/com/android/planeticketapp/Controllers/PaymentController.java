@@ -8,6 +8,7 @@ import com.android.planeticketapp.MainActivity;
 import com.android.planeticketapp.Models.MethodDateUsage;
 import com.android.planeticketapp.Models.PaymentResponse;
 import com.android.planeticketapp.Models.Route;
+import com.android.planeticketapp.OrderTicketActivity;
 import com.android.planeticketapp.ServiceAPI.PaymentServiceClient;
 import com.android.planeticketapp.ServiceAPI.PlaneTicketServiceInterface;
 import com.android.planeticketapp.R;
@@ -25,7 +26,9 @@ public class PaymentController {
     private ProgressDialog progressDialog;
     private OrdersController ordersController;
 
-    public PaymentController(OrdersController ordersController){
+    public OrderTicketActivity orderTicketActivity;
+
+    public PaymentController(OrdersController ordersController, OrderTicketActivity orderTicketActivity){
         paymentService = PaymentServiceClient.getRetrofitInstance().
                 create(PlaneTicketServiceInterface.class);
 
@@ -34,7 +37,9 @@ public class PaymentController {
         progressDialog.setMessage("Loading...");
         //progressDialog.show();
 
+        this.orderTicketActivity = orderTicketActivity;
         this.ordersController = ordersController;
+        ordersController.orderTicketActivity = this.orderTicketActivity;
         Log.e(LOG_TAG, "controller paymentController");
     }
 
@@ -70,6 +75,7 @@ public class PaymentController {
                 case "getUser":
                     Log.e(LOG_TAG, "authorize from paymentController");
                     ordersController.authorize(payment.getToken());
+                    //ordersController.authorize("1234");
                     break;
                 case "getFullUserFlightsInfo":
                     ordersController.readRoutes(payment.getToken());
